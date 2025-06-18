@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { languages } from "./languages";
 
 const App = () => {
+  const [currentWord, setCurrentWord] = useState("react");
+
+  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
   const languageElements = languages.map((lang) => {
     const styles = {
       backgroundColor: lang.backgroundColor,
@@ -13,6 +17,14 @@ const App = () => {
       </span>
     );
   });
+
+  const letterElements = currentWord
+    .split("")
+    .map((letter, index) => <span key={index}>{letter.toUpperCase()}</span>);
+
+  const keyboardElements = alphabet
+    .split("")
+    .map((letter) => <button key={letter}>{letter.toUpperCase()}</button>);
 
   return (
     <main>
@@ -27,7 +39,10 @@ const App = () => {
         <h2>You Win!</h2>
         <p>..WellDone..</p>
       </section>
-      <section className="language-chips">{languageElements} </section>
+      <section className="language-chips">{languageElements}</section>
+      <section className="word">{letterElements}</section>
+      <section className="keyboard">{keyboardElements}</section>
+      <button className="new-game">New Game</button>
     </main>
   );
 };
