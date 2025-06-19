@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { languages } from "./languages";
 import { getFarewellText, getRandomWord } from "./utils";
@@ -20,6 +20,23 @@ const App = () => {
   const lastGuessedLetter = guessedLetters[guessedLetters.length - 1];
   const isLastGuessIncorrect =
     lastGuessedLetter && !currentWord.includes(lastGuessedLetter);
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      const key = e.key.toLowerCase();
+
+      // Only accept a-z letters and ignore if game is over
+      if (key.match(/^[a-z]$/) && !isGameOver) {
+        addGuessedLetter(key);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [guessedLetters, isGameOver]);
 
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
