@@ -119,43 +119,45 @@ const App = () => {
 
   return (
     <main>
-      {/* {isGameWon && <Confetti recycle={false} numberOfPieces={1000} />} */}
-      <header>
-        <h1>Assembly:EndGame</h1>
-        <p>
-          Guess the word within 8 attempts to keep the programming world safe
-          from Assembly!
-        </p>
-      </header>
-      <section aria-live="polite" role="status" className={gameStatusClass}>
-        {renderGameStatus()}
-      </section>
-      <section className="language-chips">{languageElements}</section>
-      <section className="word">{letterElements}</section>
-      {/* Combined visually-hidden aria-live region for status update */}
-      <section className="sr-only" aria-live="polite" role="status">
-        <p>
-          {currentWord.includes(lastGuessedLetter)
-            ? `Correct! The letter ${lastGuessedLetter} is in the word.`
-            : `Sorry, the letter ${lastGuessedLetter} is not in the word.`}
-          You have {numGuessesLeft} attempts left.
-        </p>
-        <p>
-          Current word:{" "}
-          {currentWord
-            .split("")
-            .map((letter) =>
-              guessedLetters.includes(letter) ? letter + "." : "blank."
-            )
-            .join(" ")}
-        </p>
-      </section>
-      <section className="keyboard">{keyboardElements}</section>
-      {isGameOver && (
-        <button className="new-game" onClick={startNewGame}>
-          New Game
-        </button>
-      )}
+      <div className="container">
+        {/* {isGameWon && <Confetti recycle={false} numberOfPieces={1000} />} */}
+        <header>
+          <h1>Assembly:EndGame</h1>
+          <p>
+            Guess the word within 8 attempts to keep the programming world safe
+            from Assembly!
+          </p>
+        </header>
+        <section aria-live="polite" role="status" className={gameStatusClass}>
+          {renderGameStatus()}
+        </section>
+        <section className="language-chips">{languageElements}</section>
+        <section className="word">{letterElements}</section>
+        {/* Combined visually-hidden aria-live region for status update */}
+        <section className="sr-only" aria-live="polite" role="status">
+          <p>
+            {currentWord.includes(lastGuessedLetter)
+              ? `Correct! The letter ${lastGuessedLetter} is in the word.`
+              : `Sorry, the letter ${lastGuessedLetter} is not in the word.`}
+            You have {numGuessesLeft} attempts left.
+          </p>
+          <p>
+            Current word:{" "}
+            {currentWord
+              .split("")
+              .map((letter) =>
+                guessedLetters.includes(letter) ? letter + "." : "blank."
+              )
+              .join(" ")}
+          </p>
+        </section>
+        <section className="keyboard">{keyboardElements}</section>
+        {isGameOver && (
+          <button className="new-game" onClick={startNewGame}>
+            New Game
+          </button>
+        )}
+      </div>
     </main>
   );
 };
