@@ -7,6 +7,11 @@ import { getFarewellText, getRandomWord } from "./utils";
 const App = () => {
   const [currentWord, setCurrentWord] = useState(() => getRandomWord());
   const [guessedLetters, setGuessedLetters] = useState([]);
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(() => {
+    return Number(localStorage.getItem("bestStreak")) || 0;
+  });
+  const [hasStreakUpdated, setHasStreakUpdated] = useState(false);
 
   const numGuessesLeft = languages.length - 1;
   const wrongGuessCount = guessedLetters.filter(
@@ -38,6 +43,25 @@ const App = () => {
     };
   }, [guessedLetters, isGameOver]);
 
+  useEffect(() => {
+    if (isGameWon && !hasStreakUpdated) {
+      const newStreak = currentStreak + 1;
+      setCurrentStreak(newStreak);
+
+      if (newStreak > bestStreak) {
+        setBestStreak(newStreak);
+        localStorage.setItem("bestStreak", newStreak);
+      }
+
+      setHasStreakUpdated(true);
+    }
+
+    if (isGameLost && !hasStreakUpdated) {
+      setCurrentStreak(0);
+      setHasStreakUpdated(true);
+    }
+  }, [isGameWon, isGameLost, currentStreak, bestStreak, hasStreakUpdated]);
+
   // const alphabet = "abcdefghijklmnopqrstuvwxyz";
   const rows = [
     "qwertyuiop".split(""),
@@ -54,6 +78,7 @@ const App = () => {
   function startNewGame() {
     setCurrentWord(getRandomWord());
     setGuessedLetters([]);
+    setHasStreakUpdated(false);
   }
 
   const languageElements = languages.map((lang, index) => {
@@ -182,6 +207,10 @@ const App = () => {
         </header>
         <section aria-live="polite" role="status" className={gameStatusClass}>
           {renderGameStatus()}
+        </section>
+        <section className="streak-container">
+          <div className="streak-box">Current Streak: {currentStreak}</div>
+          <div className="streak-box">Best Streak: {bestStreak}</div>
         </section>
         <section className="language-chips">{languageElements}</section>
         <section className="word">{letterElements}</section>
