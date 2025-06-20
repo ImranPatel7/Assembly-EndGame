@@ -38,7 +38,12 @@ const App = () => {
     };
   }, [guessedLetters, isGameOver]);
 
-  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  // const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  const rows = [
+    "qwertyuiop".split(""),
+    "asdfghjkl".split(""),
+    "zxcvbnm".split(""),
+  ];
 
   function addGuessedLetter(letter) {
     setGuessedLetters((prevLetters) =>
@@ -77,27 +82,57 @@ const App = () => {
     );
   });
 
-  const keyboardElements = alphabet.split("").map((letter) => {
-    const isGuessed = guessedLetters.includes(letter);
-    const isCorrect = isGuessed && currentWord.includes(letter);
-    const isWrong = isGuessed && !currentWord.includes(letter);
-    const className = clsx({
-      correct: isCorrect,
-      wrong: isWrong,
-    });
-    return (
-      <button
-        className={className}
-        key={letter}
-        disabled={isGameOver}
-        aria-disabled={guessedLetters.includes(letter)}
-        aria-label={`Letter ${letter}`}
-        onClick={() => addGuessedLetter(letter)}
-      >
-        {letter.toUpperCase()}
-      </button>
-    );
-  });
+  // const keyboardElements = alphabet.split("").map((letter) => {
+  //   const isGuessed = guessedLetters.includes(letter);
+  //   const isCorrect = isGuessed && currentWord.includes(letter);
+  //   const isWrong = isGuessed && !currentWord.includes(letter);
+  //   const className = clsx({
+  //     correct: isCorrect,
+  //     wrong: isWrong,
+  //   });
+  //   return (
+  //     <button
+  //       className={className}
+  //       key={letter}
+  //       disabled={isGameOver}
+  //       aria-disabled={guessedLetters.includes(letter)}
+  //       aria-label={`Letter ${letter}`}
+  //       onClick={() => addGuessedLetter(letter)}
+  //     >
+  //       {letter.toUpperCase()}
+  //     </button>
+  //   );
+  // });
+
+  const keyboardElements = (
+    <div className="keyboard">
+      {rows.map((row, rowIndex) => (
+        <div className="keyboard-row" key={rowIndex}>
+          {row.map((letter) => {
+            const isGuessed = guessedLetters.includes(letter);
+            const isCorrect = isGuessed && currentWord.includes(letter);
+            const isWrong = isGuessed && !currentWord.includes(letter);
+            const className = clsx({
+              correct: isCorrect,
+              wrong: isWrong,
+            });
+            return (
+              <button
+                className={className}
+                key={letter}
+                disabled={isGameOver}
+                aria-disabled={guessedLetters.includes(letter)}
+                aria-label={`Letter ${letter}`}
+                onClick={() => addGuessedLetter(letter)}
+              >
+                {letter.toUpperCase()}
+              </button>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
 
   const gameStatusClass = clsx("game-status", {
     won: isGameWon,
