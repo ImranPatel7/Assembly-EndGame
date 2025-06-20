@@ -12,6 +12,7 @@ const App = () => {
     return Number(localStorage.getItem("bestStreak")) || 0;
   });
   const [hasStreakUpdated, setHasStreakUpdated] = useState(false);
+  const [hintUsedInStreak, setHintUsedInStreak] = useState(false);
 
   const numGuessesLeft = languages.length - 1;
   const wrongGuessCount = guessedLetters.filter(
@@ -58,9 +59,21 @@ const App = () => {
 
     if (isGameLost && !hasStreakUpdated) {
       setCurrentStreak(0);
+      setHintUsedInStreak(false);
       setHasStreakUpdated(true);
     }
   }, [isGameWon, isGameLost, currentStreak, bestStreak, hasStreakUpdated]);
+
+  useEffect(() => {
+    if (isGameWon) {
+      const timeout = setTimeout(() => {
+        // console.log("Auto-starting next game...");
+        startNewGame();
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isGameWon]);
 
   // const alphabet = "abcdefghijklmnopqrstuvwxyz";
   const rows = [
@@ -73,6 +86,22 @@ const App = () => {
     setGuessedLetters((prevLetters) =>
       prevLetters.includes(letter) ? prevLetters : [...prevLetters, letter]
     );
+  }
+
+  function useHint() {
+    if (hintUsedInStreak || isGameOver) return;
+
+    const unguessedLetters = currentWord
+      .split("")
+      .filter((l) => !guessedLetters.includes(l));
+
+    if (unguessedLetters.length === 0) return;
+
+    const randomLetter =
+      unguessedLetters[Math.floor(Math.random() * unguessedLetters.length)];
+
+    addGuessedLetter(randomLetter);
+    setHintUsedInStreak(true);
   }
 
   function startNewGame() {
@@ -168,9 +197,11 @@ const App = () => {
   function renderGameStatus() {
     if (!isGameOver && isLastGuessIncorrect) {
       return (
-        <p className="farewell-message">
-          {getFarewellText(languages[wrongGuessCount - 1].name)}
-        </p>
+        <>
+          <p className="farewell-message">
+            {getFarewellText(languages[wrongGuessCount - 1].name)}
+          </p>
+        </>
       );
     }
 
@@ -232,6 +263,14 @@ const App = () => {
               .join(" ")}
           </p>
         </section>
+        <button
+          className="hint-button"
+          onClick={useHint}
+          disabled={hintUsedInStreak || isGameOver}
+          title="Use hint (once per streak)"
+        >
+          💡
+        </button>
         <section className="keyboard">{keyboardElements}</section>
         {isGameOver && (
           <button className="new-game" onClick={startNewGame}>
