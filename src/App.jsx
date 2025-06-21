@@ -5,15 +5,29 @@ import { getFarewellText, getRandomWord } from "./utils";
 // import ReactConfetti from "react-confetti";
 
 const App = () => {
+  // ====== State Variables ======
+
+  // Word the user is currently trying to guess
   const [currentWord, setCurrentWord] = useState(() => getRandomWord());
+
+  // Letters the user has guessed so far
   const [guessedLetters, setGuessedLetters] = useState([]);
+
+  // Current streak of correct guesses
   const [currentStreak, setCurrentStreak] = useState(0);
+
+  // Best streak stored in localStorage
   const [bestStreak, setBestStreak] = useState(() => {
     return Number(localStorage.getItem("bestStreak")) || 0;
   });
+
+  // Used to prevent multiple updates to streak in a single game
   const [hasStreakUpdated, setHasStreakUpdated] = useState(false);
+
+  // Tracks if hint was used in the current streak
   const [hintUsedInStreak, setHintUsedInStreak] = useState(false);
 
+  // ====== Game Calculations ======
   const numGuessesLeft = languages.length - 1;
   const wrongGuessCount = guessedLetters.filter(
     (letter) => !currentWord.includes(letter)
@@ -27,6 +41,7 @@ const App = () => {
   const isLastGuessIncorrect =
     lastGuessedLetter && !currentWord.includes(lastGuessedLetter);
 
+  // ====== Keyboard Letter Input ======
   useEffect(() => {
     function handleKeyDown(e) {
       const key = e.key.toLowerCase();
@@ -36,14 +51,13 @@ const App = () => {
         addGuessedLetter(key);
       }
     }
-
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [guessedLetters, isGameOver]);
 
+  // ====== Streak Update Logic ======
   useEffect(() => {
     if (isGameWon && !hasStreakUpdated) {
       const newStreak = currentStreak + 1;
@@ -53,17 +67,17 @@ const App = () => {
         setBestStreak(newStreak);
         localStorage.setItem("bestStreak", newStreak);
       }
-
       setHasStreakUpdated(true);
     }
 
     if (isGameLost && !hasStreakUpdated) {
       setCurrentStreak(0);
-      setHintUsedInStreak(false);
+      setHintUsedInStreak(false); // Reset hint usage on streak break
       setHasStreakUpdated(true);
     }
   }, [isGameWon, isGameLost, currentStreak, bestStreak, hasStreakUpdated]);
 
+  // ====== Auto-start new game on win ======
   useEffect(() => {
     if (isGameWon) {
       const timeout = setTimeout(() => {
@@ -75,13 +89,7 @@ const App = () => {
     }
   }, [isGameWon]);
 
-  // const alphabet = "abcdefghijklmnopqrstuvwxyz";
-  const rows = [
-    "qwertyuiop".split(""),
-    "asdfghjkl".split(""),
-    "zxcvbnm".split(""),
-  ];
-
+  // ====== Helper Functions ======
   function addGuessedLetter(letter) {
     setGuessedLetters((prevLetters) =>
       prevLetters.includes(letter) ? prevLetters : [...prevLetters, letter]
@@ -110,6 +118,7 @@ const App = () => {
     setHasStreakUpdated(false);
   }
 
+  // ====== Render Language Chips ======
   const languageElements = languages.map((lang, index) => {
     const isLanguageLost = index < wrongGuessCount;
     const styles = {
@@ -124,6 +133,7 @@ const App = () => {
     );
   });
 
+  // ====== Render Word Letters ======
   const letterElements = currentWord.split("").map((letter, index) => {
     const shouldRevealLetter = isGameLost || guessedLetters.includes(letter);
     const letterClassName = clsx(
@@ -135,6 +145,14 @@ const App = () => {
       </span>
     );
   });
+
+  // ====== Render Custom Keyboard ======
+  // const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  const rows = [
+    "qwertyuiop".split(""),
+    "asdfghjkl".split(""),
+    "zxcvbnm".split(""),
+  ];
 
   // const keyboardElements = alphabet.split("").map((letter) => {
   //   const isGuessed = guessedLetters.includes(letter);
@@ -188,6 +206,7 @@ const App = () => {
     </div>
   );
 
+  // ====== Game Status Message ======
   const gameStatusClass = clsx("game-status", {
     won: isGameWon,
     lost: isGameLost,
@@ -225,6 +244,7 @@ const App = () => {
     return null;
   }
 
+  // ====== Final Render ======
   return (
     <main>
       <div className="container">

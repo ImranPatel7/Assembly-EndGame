@@ -1,5 +1,6 @@
+/* ==== GLOBAL RESET & DEFAULTS ==== */
 * {
-  box-sizing: border-box;
+  box-sizing: border-box; /* Ensures padding and borders don't affect element width */
 }
 
 body {
@@ -14,6 +15,7 @@ body {
   align-items: center;
 }
 
+/* Center the main game container */
 main {
   width: 100%;
   display: flex;
@@ -29,6 +31,7 @@ main {
   padding: 0 1rem;
 }
 
+/* ==== HEADER ==== */
 header {
   text-align: center;
 }
@@ -44,6 +47,7 @@ header > p {
   color: #f0f3ad;
 }
 
+/* ==== GAME STATUS SECTION ==== */
 section.game-status {
   background-color: #10a95b;
   display: flex;
@@ -70,6 +74,7 @@ section.game-status > h2 {
   margin: 5px;
 }
 
+/* Color variants based on game state */
 section.game-status.won {
   background-color: #10a95b;
 }
@@ -83,6 +88,7 @@ section.game-status.farewell {
   border: 1px dashed #323232;
 }
 
+/* ==== LANGUAGE CHIPS ==== */
 section.language-chips {
   display: flex;
   flex-wrap: wrap;
@@ -96,6 +102,7 @@ span.chip {
   padding: 4.5px;
 }
 
+/* Lost languages appear faded with skull overlay */
 span.chip.lost {
   position: relative;
   opacity: 0.6;
@@ -123,6 +130,7 @@ span.chip.lost::after {
   border-radius: 3px;
 }
 
+/* ==== WORD DISPLAY ==== */
 section.word {
   display: flex;
   justify-content: center;
@@ -141,10 +149,12 @@ section.word > span {
   border-bottom: 1px solid #f9f4da;
 }
 
+/* Red for missed (unrevealed) letters */
 section.word > span.missed-letter {
   color: #ec5d49;
 }
 
+/* ==== KEYBOARD STYLING ==== */
 /* 🎯 Keyboard Layout with 3 Rows */
 .keyboard {
   display: flex;
@@ -171,6 +181,7 @@ section.word > span.missed-letter {
   font-weight: bold;
 }
 
+/* Keyboard button states */
 .keyboard button.correct {
   background-color: #10a95b;
 }
@@ -184,6 +195,7 @@ section.word > span.missed-letter {
   opacity: 0.5;
 }
 
+/* ==== NEW GAME BUTTON ==== */
 button.new-game {
   background-color: #11b5e5;
   border: 1px solid #d7d7d7;
@@ -197,7 +209,7 @@ button.new-game {
   cursor: pointer;
 }
 
-/* Accessibility */
+/* ==== ACCESSIBILITY - Screen Reader Only ==== */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -210,6 +222,7 @@ button.new-game {
   border: 0;
 }
 
+/* ==== STREAK BOXES ==== */
 .streak-container {
   display: flex;
   justify-content: center;
@@ -229,6 +242,7 @@ button.new-game {
   width: 150px;
 }
 
+/* ==== HINT BUTTON ==== */
 .hint-button {
   background-color: lightgreen;
   border: 1px solid gold;
@@ -245,6 +259,9 @@ button.new-game {
   cursor: not-allowed;
 }
 
+/* ==== RESPONSIVE DESIGN ==== */
+
+/* Stack streak boxes on small screens */
 @media (max-width: 500px) {
   .streak-container {
     flex-direction: column;
@@ -252,7 +269,7 @@ button.new-game {
   }
 }
 
-/* 📱 Responsive adjustments */
+/* Smaller word and keyboard buttons for phones */
 @media (max-width: 600px) {
   section.word > span {
     width: 30px;
