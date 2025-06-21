@@ -227,8 +227,8 @@ const App = () => {
     if (isGameWon) {
       return (
         <>
-          <h2>You win!</h2>
-          <p>Well done! 🎉</p>
+          <h2>Correct!</h2>
+          <p>Let's keep the streak going! 💪</p>
         </>
       );
     }
